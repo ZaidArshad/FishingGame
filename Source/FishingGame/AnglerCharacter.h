@@ -20,6 +20,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere)
+	float MovementVelocity;
+
+	UPROPERTY(EditAnywhere)
+	float CameraSensitivity;
+
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	class UInputMappingContext* DefaultMappingContext;
 
@@ -31,6 +37,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	class UInputAction* JumpAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	class UInputAction* CameraPanAction;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,5 +48,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void Move(const FInputActionValue& Value);
+
+	void CameraPan(const FInputActionValue& Value);
 
 };

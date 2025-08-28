@@ -7,9 +7,11 @@
 // Sets default values
 AAnglerCharacter::AAnglerCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+
+	MovementVelocity = 1.0f;
+	CameraSensitivity = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -43,27 +45,34 @@ void AAnglerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAnglerCharacter::Move);
+		EnhancedInputComponent->BindAction(CameraPanAction, ETriggerEvent::Triggered, this, &AAnglerCharacter::CameraPan);
+
 	}
 
 }
 
 void AAnglerCharacter::Move(const FInputActionValue& Value)
 {
-	// 2D Vector of movement values returned from the input action
-	const FVector2D MovementValue = Value.Get<FVector2D>();
+	const FVector2D MovementValue = Value.Get<FVector2D>() * MovementVelocity;
 
-	UE_LOG(LogTemp, Display, TEXT("%f %f"), MovementValue.X, MovementValue.Y);
-
-	// Check if the controller posessing this Actor is valid
 	if (Controller)
 	{
-		// Add left and right movement
 		const FVector Right = GetActorRightVector();
-		AddMovementInput(Right, MovementValue.Y * 10);
+		AddMovementInput(Right, MovementValue.Y);
 
-		// Add forward and back movement
 		const FVector Forward = GetActorForwardVector();
-		AddMovementInput(Forward, MovementValue.X * 10);
+		AddMovementInput(Forward, MovementValue.X);
+	}
+}
+
+void AAnglerCharacter::CameraPan(const FInputActionValue& Value)
+{
+	const FVector2D MovementValue = Value.Get<FVector2D>() * CameraSensitivity;
+
+	if (Controller)
+	{
+		AddControllerYawInput(MovementValue.X);
+		AddControllerPitchInput(-MovementValue.Y);
 	}
 }
 
