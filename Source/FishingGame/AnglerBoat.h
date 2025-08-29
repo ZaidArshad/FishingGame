@@ -4,21 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
-#include "GameFramework/Character.h"
-#include "AnglerCharacter.generated.h"
+#include "GameFramework/Pawn.h"
+#include "AnglerBoat.generated.h"
 
 UCLASS()
-class FISHINGGAME_API AAnglerCharacter : public ACharacter
+class FISHINGGAME_API AAnglerBoat : public APawn
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	AAnglerCharacter();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	// Sets default values for this pawn's properties
+	AAnglerBoat();
 
 	UPROPERTY(EditAnywhere)
 	float MovementVelocity;
@@ -31,26 +27,22 @@ protected:
 
 	// Move Input Actions
 	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction*  MoveAction;
-
-	// Jump Input Actions
-	UPROPERTY(EditDefaultsOnly, Category = Input)
-	class UInputAction* JumpAction;
+	class UInputAction* MoveAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	class UInputAction* CameraPanAction;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void Move(const FInputActionValue& Value);
 
 	void CameraPan(const FInputActionValue& Value);
-
-	void ToggleDrive();
-
 };
