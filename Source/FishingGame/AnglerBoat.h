@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
-#include "GameFramework/Pawn.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/Pawn.h" 
 #include "AnglerBoat.generated.h"
 
 UCLASS()
@@ -15,6 +17,12 @@ class FISHINGGAME_API AAnglerBoat : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AAnglerBoat();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	UCameraComponent* CameraComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	USpringArmComponent* SpringArmComp;
 
 	UPROPERTY(EditAnywhere)
 	float MovementVelocity;

@@ -4,10 +4,30 @@
 #include "AnglerBoat.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 AAnglerBoat::AAnglerBoat()
 {
+
+	UStaticMeshComponent* CubeMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CubeMesh"));
+	CubeMeshComp->SetMobility(EComponentMobility::Movable);
+	RootComponent = CubeMeshComp;
+
+	ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube"));
+	UE_LOG(LogTemp, Display, TEXT("cube asset succeeded %d"), CubeAsset.Succeeded());
+	if (CubeAsset.Succeeded())
+	{
+		CubeMeshComp->SetStaticMesh(CubeAsset.Object);
+	}
+
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
+	SpringArmComp->TargetArmLength = 300.0f;
+	SpringArmComp->SetupAttachment(CubeMeshComp);
+
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	CameraComp->SetupAttachment(SpringArmComp);
+
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	//AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -68,8 +88,10 @@ void AAnglerBoat::CameraPan(const FInputActionValue& Value)
 
 	if (Controller)
 	{
-		AddControllerYawInput(MovementValue.X);
-		AddControllerPitchInput(-MovementValue.Y);
+		FRotator CurrentRotation = SpringArmComp->GetComponentRotation();
+		CurrentRotation.Yaw -= MovementValue.X;
+		CurrentRotation.Pitch -= MovementValue.Y;
+		SpringArmComp->SetWorldRotation(CurrentRotation);
 	}
 }
 
