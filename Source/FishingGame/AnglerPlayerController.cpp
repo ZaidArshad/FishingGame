@@ -43,10 +43,15 @@ void AAnglerPlayerController::ToggleDrive()
 	{
 		UE_LOG(LogTemp, Display, TEXT("Possess boat %f"), AnglerBoat->GetActorLocation().X);
 		Possess(AnglerBoat);
+		FAttachmentTransformRules AttachmentRule(EAttachmentRule::KeepWorld, true);
+		AnglerCharacter->AttachToActor(AnglerBoat, AttachmentRule);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Display, TEXT("Possess character %f"), AnglerCharacter->GetActorLocation().X);
 		Possess(AnglerCharacter);
+		AnglerCharacter->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	}
+
+	AnglerCharacter->SetDriveMode(IsDriving);
 }

@@ -4,6 +4,7 @@
 #include "AnglerCharacter.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/CharacterMovementComponent.h" 
 
 // Sets default values
 AAnglerCharacter::AAnglerCharacter()
@@ -75,4 +76,18 @@ void AAnglerCharacter::CameraPan(const FInputActionValue& Value)
 		AddControllerYawInput(MovementValue.X);
 		AddControllerPitchInput(-MovementValue.Y);
 	}
+}
+
+void AAnglerCharacter::SetDriveMode(const bool DriveMode)
+{
+	if (DriveMode)
+	{
+		GetCharacterMovement()->DisableMovement();
+	}
+	else
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+	}
+
+	SetActorEnableCollision(!DriveMode);
 }

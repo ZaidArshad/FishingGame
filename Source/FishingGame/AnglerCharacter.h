@@ -51,6 +51,6 @@ public:
 
 	void CameraPan(const FInputActionValue& Value);
 
-	void ToggleDrive();
+	void SetDriveMode(const bool DriveMode);
 
 };
